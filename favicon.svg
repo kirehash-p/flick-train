@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <title>FLICK</title>
+  <defs>
+    <linearGradient id="train" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7d471"/>
+      <stop offset="1" stop-color="#e6a83f"/>
+    </linearGradient>
+    <linearGradient id="window" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#243754"/>
+      <stop offset="1" stop-color="#101925"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="62" fill="#0b0f17"/>
+  <path d="M31 211h194" fill="none" stroke="#8ea3ff" stroke-linecap="round" stroke-width="7"/>
+  <path d="M39 204h178" fill="none" stroke="#25344e" stroke-linecap="round" stroke-width="5"/>
+  <rect x="15" y="63" width="226" height="115" rx="29" fill="url(#train)"/>
+  <path d="M39 73h156c18 0 32 14 32 32v16H39z" fill="url(#window)"/>
+  <path d="M39 121h188v34c0 12-10 22-22 22H61c-12 0-22-10-22-22z" fill="#162334"/>
+  <path d="M213 124h15v29c0 10-8 19-19 22l4-16z" fill="#f5c55b"/>
+  <circle cx="63" cy="190" r="18" fill="#17202d" stroke="#f5c55b" stroke-width="7"/>
+  <circle cx="193" cy="190" r="18" fill="#17202d" stroke="#f5c55b" stroke-width="7"/>
+  <circle cx="63" cy="190" r="5" fill="#8ea3ff"/>
+  <circle cx="193" cy="190" r="5" fill="#8ea3ff"/>
+  <text x="128" y="151" fill="#f5c55b" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="900" letter-spacing="4" text-anchor="middle" textLength="166" lengthAdjust="spacingAndGlyphs">FLICK</text>
+  <circle cx="225" cy="104" r="6" fill="#3ddb91"/>
+</svg>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0f17" />
+    <meta name="description" content="かなとアルファベットのフリック入力を、画面上のキーボードで練習できます。" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <title>Flick Steps</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="." aria-label="Flick Steps ホーム">
+          <img class="brand-icon" src="favicon.svg" alt="" aria-hidden="true" />
+          <span class="brand-name">Flick Steps</span>
+        </a>
+
+        <nav class="mode-switch" aria-label="練習モード">
+          <button class="mode-button is-active" type="button" data-mode="character" aria-pressed="true">
+            <span class="mode-icon" aria-hidden="true">一</span>
+            <span>一文字</span>
+          </button>
+          <button class="mode-button" type="button" data-mode="words" aria-pressed="false">
+            <span class="mode-icon" aria-hidden="true">語</span>
+            <span>ことば</span>
+          </button>
+        </nav>
+
+        <div class="topbar-actions">
+          <button class="attack-toggle" id="timeAttackToggle" type="button" aria-pressed="false">
+            <span class="toggle-dot" aria-hidden="true"></span>
+            <span>タイムアタック</span>
+          </button>
+          <button class="settings-button" id="settingsButton" type="button" aria-label="設定を開く" aria-expanded="false" aria-controls="settingsPanel">⚙</button>
+          <div class="header-stats" aria-label="現在のセッション">
+            <span><small>正解</small><strong id="headerCorrect">0</strong></span>
+            <span><small>ミス</small><strong id="headerMistakes">0</strong></span>
+          </div>
+        </div>
+      </header>
+
+      <aside class="settings-panel" id="settingsPanel" role="dialog" aria-labelledby="settingsTitle" hidden>
+        <div class="settings-heading">
+          <strong id="settingsTitle">設定</strong>
+          <button class="settings-close" id="settingsCloseButton" type="button" aria-label="設定を閉じる">×</button>
+        </div>
+        <button class="setting-row is-on" type="button" data-setting="showGuide" aria-pressed="true">
+          <span><strong>入力ガイド</strong><small>方向カード・目標表示</small></span>
+          <em class="setting-state">表示</em>
+        </button>
+        <button class="setting-row is-on" type="button" data-setting="showKeyboardLabels" aria-pressed="true">
+          <span><strong>キーボードの文字</strong><small>キーのかな・アルファベット</small></span>
+          <em class="setting-state">表示</em>
+        </button>
+      </aside>
+
+      <main class="workspace">
+        <section class="practice-card" aria-label="フリック入力の練習">
+          <div class="session-bar">
+            <div class="session-meta">
+              <strong id="sessionGoal">20問</strong>
+            </div>
+            <div class="session-score" aria-label="セッションの進み具合">
+              <span><strong id="sessionProgressCount">0/20</strong><small id="sessionProgressLabel">進み</small></span>
+              <span><strong id="sessionAccuracy">—</strong><small>正確さ</small></span>
+              <span><strong id="sessionStreak">0</strong><small>連続</small></span>
+              <span class="session-time"><strong id="sessionTime">0:00</strong><small>時間</small></span>
+            </div>
+            <button class="restart-button" id="restartButton" type="button">やり直す</button>
+          </div>
+
+          <div class="progress-track" id="normalProgressTrack" aria-hidden="true"><span id="progressBar"></span></div>
+
+          <div class="time-attack-strip" id="timeAttackStrip" hidden>
+            <div class="attack-heading">
+              <span class="eyebrow">TIME ATTACK</span>
+              <strong id="attackLevel">LEVEL 1</strong>
+            </div>
+            <div class="attack-gauge" role="progressbar" aria-label="残りゲージ" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+              <span id="attackGaugeFill"></span>
+            </div>
+            <div class="attack-stat"><strong id="attackCorrect">0</strong><small>クリア</small></div>
+            <div class="attack-stat"><strong id="attackRate">3.4</strong><small>減少/秒</small></div>
+            <button class="attack-start-button" id="attackStartButton" type="button">開始</button>
+          </div>
+
+          <div class="prompt-area" id="promptArea">
+            <div class="prompt-kicker-row">
+              <p class="prompt-kicker" id="promptKicker">お題</p>
+              <span class="focus-badge" id="focusBadge">あ行 · 中央</span>
+            </div>
+            <div class="prompt-main">
+              <div class="prompt-copy">
+                <div class="prompt-text" id="promptText" aria-live="polite">あ</div>
+                <div class="word-target" id="wordTarget" aria-live="polite" hidden></div>
+                <p class="prompt-sub" id="promptSub">中央をタップして「あ」を入力</p>
+              </div>
+              <div class="direction-card" id="directionCard" aria-label="目標の方向">
+                <div class="direction-arrow" id="directionArrow" aria-hidden="true">•</div>
+                <div class="direction-copy">
+                  <span>目標の動き</span>
+                  <strong id="directionLabel">タップ</strong>
+                </div>
+              </div>
+            </div>
+            <div class="input-preview" aria-live="polite">
+              <span class="preview-label">入力中</span>
+              <span class="preview-text" id="previewText">まだ入力されていません</span>
+              <span class="preview-caret" aria-hidden="true"></span>
+            </div>
+            <div class="feedback-line" id="feedbackLine" aria-live="polite">
+              <span class="feedback-icon" id="feedbackIcon" aria-hidden="true">i</span>
+              <span id="feedbackText">入力待ち</span>
+            </div>
+          </div>
+
+          <div class="keyboard-section">
+            <div class="keyboard-heading">
+              <div>
+                <p class="eyebrow">画面キーボード</p>
+                <strong id="keyboardInstruction">キーの表示を見て入力</strong>
+              </div>
+              <div class="language-switch" role="group" aria-label="キーボードの種類">
+                <button class="language-button is-active" type="button" data-language="kana" aria-pressed="true">かな</button>
+                <button class="language-button" type="button" data-language="alphabet" aria-pressed="false">ABC</button>
+              </div>
+            </div>
+
+            <div class="keyboard-shell" id="keyboardShell">
+              <div class="keyboard-grid" id="keyboard" aria-label="フリックキーボード"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="session-overlay" id="sessionOverlay" hidden>
+      <div class="overlay-backdrop" data-close-summary="true"></div>
+      <section class="summary-dialog" role="dialog" aria-modal="true" aria-labelledby="summaryTitle">
+        <button class="summary-close icon-button" id="closeSummaryButton" type="button" aria-label="閉じる">×</button>
+        <span class="summary-eyebrow" id="summaryEyebrow">RESULT</span>
+        <div class="summary-check" id="summaryCheck" aria-hidden="true">✓</div>
+        <h2 id="summaryTitle">練習完了</h2>
+        <p id="summaryMessage">正しい動きを積み重ねられています。</p>
+        <div class="summary-stats">
+          <div><strong id="summaryAccuracy">100%</strong><span>正確さ</span></div>
+          <div><strong id="summaryInputs">20</strong><span id="summaryInputsLabel">入力数</span></div>
+          <div><strong id="summaryTime">0:00</strong><span>時間</span></div>
+        </div>
+        <button class="primary-button" id="summaryRestartButton" type="button">もう一度やる <span aria-hidden="true">↗</span></button>
+      </section>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script src="app.js" defer></script>
+  </body>
+</html>

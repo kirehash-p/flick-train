@@ -1573,7 +1573,7 @@ body.is-modal {
   .feedback-icon { width: 12px; height: 12px; flex-basis: 12px; font-size: 7px; }
 
   .keyboard-section {
-    --mobile-key-row-height: clamp(42px, 12vw, 54px);
+    --mobile-key-row-height: clamp(46px, 13.8vw, 62px);
     min-height: 0;
     flex: 0 0 auto;
     padding: 6px 0 7px;

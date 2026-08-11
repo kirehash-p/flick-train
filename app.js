@@ -67,19 +67,20 @@
   const ALPHABET_QUOTES = { id: "alphabet-quotes", label: "'\";:", subLabel: "0", map: { center: "'", left: "\"", up: ";", right: ":", down: "0" }, practice: false, alphabetGroup: true };
   const ALPHABET_PUNCTUATION = { id: "alphabet-punctuation", label: ".,?!", subLabel: "", map: { center: ".", left: ",", up: "?", right: "!" }, practice: false, alphabetGroup: true };
 
+  // Gboardの英字「数字・記号」レイヤー。数字は中央、記号は各キーのフリックで入力する。
   const ALPHABET_SYMBOL_GROUPS = [
-    { id: "symbol-numbers-a", label: "123", subLabel: "", map: { center: "1", left: "2", up: "3", right: "4", down: "5" }, practice: false },
-    { id: "symbol-numbers-b", label: "678", subLabel: "", map: { center: "6", left: "7", up: "8", right: "9", down: "0" }, practice: false },
-    { id: "symbol-marks-a", label: "@#$%&", subLabel: "", map: { center: "@", left: "#", up: "$", right: "%", down: "&" }, practice: false },
-    { id: "symbol-marks-b", label: "-+*/=", subLabel: "", map: { center: "-", left: "+", up: "*", right: "/", down: "=" }, practice: false },
-    { id: "symbol-brackets", label: "()[]{}", subLabel: "", map: { center: "(", left: ")", up: "[", right: "]", down: "{" }, practice: false },
-    { id: "symbol-quotes", label: "'\"`~", subLabel: "", map: { center: "'", left: "\"", up: "`", right: "~", down: "}" }, practice: false },
-    { id: "symbol-punct-a", label: ":;!?", subLabel: "", map: { center: ":", left: ";", up: "!", right: "?", down: "\\" }, practice: false },
-    { id: "symbol-punct-b", label: ".,<>", subLabel: "", map: { center: ".", left: ",", up: "<", right: ">", down: "|" }, practice: false },
-    { id: "symbol-percent", label: "%^&", subLabel: "", map: { center: "%", left: "^", up: "&", right: "_", down: "=" }, practice: false },
-    { id: "symbol-bracket-b", label: "[]{}", subLabel: "", map: { center: "[", left: "]", up: "{", right: "}", down: "\\" }, practice: false },
-    { id: "symbol-backslash", label: "\\|", subLabel: "", map: { center: "\\", left: "|", up: "/", right: "~", down: "`" }, practice: false },
-    { id: "symbol-extra", label: "…·", subLabel: "", map: { center: "…", left: "·", up: "–", right: "—", down: "©" }, practice: false },
+    { id: "symbol-1", label: "1", subLabel: "☆→←©", map: { center: "1", left: "☆", up: "→", right: "←", down: "©" }, practice: false },
+    { id: "symbol-2", label: "2", subLabel: "¥€£₩", map: { center: "2", left: "¥", up: "€", right: "£", down: "₩" }, practice: false },
+    { id: "symbol-3", label: "3", subLabel: "%#&$", map: { center: "3", left: "%", up: "#", right: "&", down: "$" }, practice: false },
+    { id: "symbol-4", label: "4", subLabel: "*·–—", map: { center: "4", left: "*", up: "·", right: "–", down: "—" }, practice: false },
+    { id: "symbol-5", label: "5", subLabel: "+×÷±", map: { center: "5", left: "+", up: "×", right: "÷", down: "±" }, practice: false },
+    { id: "symbol-6", label: "6", subLabel: "<=>-", map: { center: "6", left: "<", up: "=", right: ">", down: "-" }, practice: false },
+    { id: "symbol-7", label: "7", subLabel: "「」:;", map: { center: "7", left: "「", up: "」", right: ":", down: ";" }, practice: false },
+    { id: "symbol-8", label: "8", subLabel: "^_|\\", map: { center: "8", left: "^", up: "_", right: "|", down: "\\" }, practice: false },
+    { id: "symbol-9", label: "9", subLabel: "°`\"'", map: { center: "9", left: "°", up: "`", right: "\"", down: "'" }, practice: false },
+    { id: "symbol-brackets", label: "()[]", subLabel: "{}", map: { center: "(", left: ")", up: "[", right: "]", down: "{" }, practice: false },
+    { id: "symbol-0", label: "0", subLabel: "~…@", map: { center: "0", left: "~", up: "…", right: "@", down: "}" }, practice: false },
+    { id: "symbol-punctuation", label: ".,-/", subLabel: "", map: { center: ".", left: ",", up: "?", right: "!", down: "/" }, practice: false },
   ];
 
   const KEY_DEFINITIONS = {
@@ -112,6 +113,19 @@
       [SHIFT_KEY, ALPHABET_QUOTES, ALPHABET_PUNCTUATION],
       [SYMBOL_TOGGLE_KEY, DELETE_KEY],
     ];
+  }
+
+  function visibleAlphabetActionForValue(value) {
+    if (state.language !== "alphabet" || value === null || value === undefined) return null;
+    const targetValue = String(value).toLowerCase();
+    for (const definition of alphabetRows().flat()) {
+      for (const [direction, candidate] of Object.entries(definition.map || {})) {
+        if (candidate && String(candidate).toLowerCase() === targetValue) {
+          return { value: candidate, keyId: definition.id, direction };
+        }
+      }
+    }
+    return null;
   }
 
   const WORDS = {
@@ -751,7 +765,19 @@
         && typeof expected.value === "string"
         && typeof action.value === "string"
         && expected.value.toLowerCase() === action.value.toLowerCase());
-    if (expected.keyId === action.keyId && (expected.direction === action.direction || isTransformTap) && valueMatches) {
+    const exactActionMatches = expected.keyId === action.keyId
+      && (expected.direction === action.direction || isTransformTap)
+      && valueMatches;
+    const visibleLayerAction = state.language === "alphabet"
+      ? visibleAlphabetActionForValue(expected.value)
+      : null;
+    const visibleLayerActionMatches = Boolean(
+      visibleLayerAction
+      && valueMatches
+      && visibleLayerAction.keyId === action.keyId
+      && visibleLayerAction.direction === action.direction,
+    );
+    if (exactActionMatches || visibleLayerActionMatches) {
       state.typedTokens.push(action.value);
       state.session.correct += 1;
       state.session.streak += 1;
@@ -918,7 +944,11 @@
     const showGuide = state.settings.showGuide;
     const showDirection = Boolean(showGuide && expected && state.mode === "character" && !isTimeAttack());
     const currentValue = expected ? readableValue(expected.value) : "完了";
-    const currentDefinition = expected ? getDefinition(expected.keyId) : null;
+    const visibleAction = expected && state.language === "alphabet"
+      ? visibleAlphabetActionForValue(expected.value)
+      : expected;
+    const guideDirection = visibleAction?.direction || expected?.direction || "center";
+    const currentDefinition = visibleAction ? getDefinition(visibleAction.keyId) : null;
 
     elements.promptKicker.textContent = "お題";
     elements.promptText.hidden = target.kind === "word";
@@ -932,21 +962,21 @@
     } else if (target.kind === "word") {
       elements.promptSub.textContent = expected ? `つぎは「${currentValue}」` : "ことばが完成しました";
     } else if (showDirection && expected) {
-      elements.promptSub.textContent = expected.direction === "center"
+      elements.promptSub.textContent = guideDirection === "center"
         ? `中央をタップして「${currentValue}」を入力`
-        : `${DIRECTIONS[expected.direction].label}して「${currentValue}」を入力`;
+        : `${DIRECTIONS[guideDirection].label}して「${currentValue}」を入力`;
     } else {
       elements.promptSub.textContent = "目標の文字を思い出して入力";
     }
 
     elements.directionCard.hidden = !showDirection;
-    elements.directionArrow.textContent = showDirection ? DIRECTIONS[expected.direction].arrow : "•";
-    elements.directionLabel.textContent = showDirection ? DIRECTIONS[expected.direction].label : "";
+    elements.directionArrow.textContent = showDirection ? DIRECTIONS[guideDirection].arrow : "•";
+    elements.directionLabel.textContent = showDirection ? DIRECTIONS[guideDirection].label : "";
     elements.focusBadge.hidden = !showGuide;
     elements.focusBadge.className = "focus-badge";
     if (state.mode === "words") elements.focusBadge.classList.add("is-words");
     if (isTimeAttack()) elements.focusBadge.classList.add("is-attack");
-    if (showDirection && currentDefinition) elements.focusBadge.textContent = `${currentDefinition.subLabel} · ${DIRECTIONS[expected.direction].short}`;
+    if (showDirection && currentDefinition) elements.focusBadge.textContent = `${currentDefinition.subLabel} · ${DIRECTIONS[guideDirection].short}`;
     else if (state.mode === "words") elements.focusBadge.textContent = "次の文字";
     else if (isTimeAttack()) elements.focusBadge.textContent = "ゲージを保つ";
     else elements.focusBadge.textContent = state.language === "kana" ? "かな · 基本" : "ABC · 基本";
@@ -976,7 +1006,10 @@
     if (!state.settings.showGuide) return;
     if (isTimeAttack()) return;
     const expected = state.target.tokens[state.typedTokens.length];
-    const targetButton = expected && elements.keyboard.querySelector(`[data-key-id="${expected.keyId}"]`);
+    const visibleAction = expected && state.language === "alphabet"
+      ? visibleAlphabetActionForValue(expected.value)
+      : expected;
+    const targetButton = visibleAction && elements.keyboard.querySelector("[data-key-id=\"" + visibleAction.keyId + "\"]");
     if (targetButton) targetButton.classList.add("is-target");
   }
 

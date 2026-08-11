@@ -992,6 +992,13 @@ select:focus-visible {
   opacity: 0;
 }
 
+/* 文字を隠しても、英字レイヤーの切替先と削除操作は判別できるようにする。 */
+.keyboard-grid[data-language="alphabet"][data-labels="hidden"] .flick-key--symbol-toggle .key-content,
+.keyboard-grid[data-language="alphabet"][data-labels="hidden"] .flick-key--delete .key-content {
+  visibility: visible;
+  opacity: 1;
+}
+
 .keyboard-grid[data-labels="hidden"] .key-popover {
   display: none !important;
 }

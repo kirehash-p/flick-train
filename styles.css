@@ -981,6 +981,11 @@ select:focus-visible {
   display: none;
 }
 
+.keyboard-grid.is-alphabet-flick .key-sub {
+  font-size: clamp(8px, 0.9vw, 12px);
+  letter-spacing: 0.04em;
+}
+
 .keyboard-grid[data-labels="hidden"] .key-content,
 .keyboard-grid[data-labels="hidden"] .key-side-label {
   visibility: hidden;
@@ -1595,7 +1600,9 @@ body.is-modal {
   .key-content { gap: 2px; }
   .key-main,
   .flick-key[data-language="alphabet"] .key-main { font-size: clamp(17px, 5.2vw, 22px); }
-  .key-sub { font-size: 6px; }
+  .keyboard-grid.is-alphabet-flick .key-sub {
+    font-size: clamp(8px, 2.5vw, 10px);
+  }
   .key-side-label { font-size: 8px; }
   .key-side-label.is-current { font-size: 9px; }
   .key-popover { top: calc(-100% - 6px); width: max(100%, 72px); min-width: 72px; height: 64px; padding: 4px; border-radius: 12px 12px 8px 8px; }

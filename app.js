@@ -41,7 +41,7 @@
     { id: "na-row", label: "な", subLabel: "な行", map: { center: "な", left: "に", up: "ぬ", right: "ね", down: "の" } },
     { id: "ha-row", label: "は", subLabel: "は行", map: { center: "は", left: "ひ", up: "ふ", right: "へ", down: "ほ" } },
     { id: "ma-row", label: "ま", subLabel: "ま行", map: { center: "ま", left: "み", up: "む", right: "め", down: "も" } },
-    { id: "ya-row", label: "や", subLabel: "や行", map: { center: "や", left: "ゆ", right: "よ" } },
+    { id: "ya-row", label: "や", subLabel: "や行", map: { center: "や", up: "ゆ", down: "よ" } },
     { id: "ra-row", label: "ら", subLabel: "ら行", map: { center: "ら", left: "り", up: "る", right: "れ", down: "ろ" } },
     { id: "dakuten", label: "゛゜", subLabel: "大⇔小", action: "transform", map: { center: "", left: "゛", up: "小", right: "゜" } },
     { id: "wa-row", label: "わ", subLabel: "わ行", map: { center: "わ", left: "を", up: "ん", right: "ー" } },

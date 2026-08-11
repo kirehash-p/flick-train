@@ -85,7 +85,10 @@ select:focus-visible {
   z-index: 1;
   display: flex;
   width: min(1440px, calc(100% - 28px));
-  height: 100dvh;
+  height: 100vh;
+  height: 100svh;
+  height: var(--viewport-height, 100svh);
+  max-height: var(--viewport-height, 100svh);
   min-height: 0;
   margin: 0 auto;
   padding: max(10px, env(safe-area-inset-top)) 0 max(10px, env(safe-area-inset-bottom));
@@ -1569,20 +1572,28 @@ body.is-modal {
   .feedback-line { min-height: 19px; flex-basis: 19px; padding-top: 3px; font-size: 7px; }
   .feedback-icon { width: 12px; height: 12px; flex-basis: 12px; font-size: 7px; }
 
-  .keyboard-section { min-height: 0; flex-basis: 64%; padding: 6px 8px 7px; }
+  .keyboard-section {
+    --mobile-key-row-height: clamp(50px, calc((100vw - 44px) * 0.18), 82px);
+    min-height: 0;
+    flex: 0 0 auto;
+    padding: 6px 8px 7px;
+  }
   .keyboard-heading { flex-basis: 29px; gap: 8px; }
   .keyboard-heading .eyebrow { display: none; }
   .keyboard-heading strong { font-size: 8px; }
   .language-switch { padding: 2px; border-radius: 8px; }
   .language-button { min-width: 37px; min-height: 25px; padding: 4px 6px; border-radius: 6px; font-size: 8px; }
-  .keyboard-shell { padding: 5px; border-radius: 12px; }
+  .keyboard-shell { flex: 0 0 auto; padding: 5px; border-radius: 12px; }
+  .keyboard-grid { flex: 0 0 auto; }
+  .keyboard-grid[data-language="kana"] { height: calc(var(--mobile-key-row-height) * 4 + 12px); }
+  .keyboard-grid[data-language="alphabet"] { height: calc(var(--mobile-key-row-height) * 4.72 + 16px); }
   .keyboard-grid { gap: 4px; }
-  .keyboard-row { gap: 4px; }
-  .keyboard-row--utility { flex-basis: 42px; }
+  .keyboard-row { flex: 0 0 var(--mobile-key-row-height); gap: 4px; }
+  .keyboard-row--utility { flex-basis: calc(var(--mobile-key-row-height) * 0.72); }
   .flick-key { padding: 2px 3px; border-radius: 8px; box-shadow: 0 2px 0 rgba(3, 6, 10, 0.52), 0 4px 8px rgba(0, 0, 0, 0.1); }
   .key-content { gap: 2px; }
   .key-main,
-  .flick-key[data-language="alphabet"] .key-main { font-size: 17px; }
+  .flick-key[data-language="alphabet"] .key-main { font-size: clamp(17px, 5.2vw, 22px); }
   .key-sub { font-size: 6px; }
   .key-side-label { font-size: 8px; }
   .key-side-label.is-current { font-size: 9px; }

@@ -189,6 +189,11 @@
     elements.settingRows = [...document.querySelectorAll("[data-setting]")];
   }
 
+  function syncViewportHeight() {
+    const viewportHeight = window.visualViewport?.height || window.innerHeight;
+    if (viewportHeight > 0) document.documentElement.style.setProperty("--viewport-height", `${Math.round(viewportHeight)}px`);
+  }
+
   function isTimeAttack() {
     return state.timeAttackEnabled;
   }
@@ -1134,6 +1139,9 @@
 
   async function init() {
     getElements();
+    syncViewportHeight();
+    window.addEventListener("resize", syncViewportHeight, { passive: true });
+    window.visualViewport?.addEventListener("resize", syncViewportHeight, { passive: true });
     state.characterIndexes.kana = buildCharacterIndex("kana");
     state.characterIndexes.alphabet = buildCharacterIndex("alphabet");
 

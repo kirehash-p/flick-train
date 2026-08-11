@@ -1587,7 +1587,8 @@ body.is-modal {
   .keyboard-grid { flex: 0 0 auto; }
   .keyboard-grid[data-language="kana"] { height: calc(var(--mobile-key-row-height) * 4 + 12px); }
   .keyboard-grid[data-language="alphabet"] { height: calc(var(--mobile-key-row-height) * 4.72 + 16px); }
-  .keyboard-grid { gap: 4px; }
+  .keyboard-grid.is-alphabet-flick,
+  .keyboard-grid[data-language="kana"] { gap: 4px; }
   .keyboard-row { flex: 0 0 var(--mobile-key-row-height); gap: 4px; }
   .keyboard-row--utility { flex-basis: calc(var(--mobile-key-row-height) * 0.72); }
   .flick-key { padding: 2px 3px; border-radius: 8px; box-shadow: 0 2px 0 rgba(3, 6, 10, 0.52), 0 4px 8px rgba(0, 0, 0, 0.1); }

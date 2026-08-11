@@ -982,7 +982,7 @@
     document.querySelectorAll(".flick-key.is-target").forEach((key) => key.classList.remove("is-target"));
     if (!state.target || !state.session || state.session.ended || state.session.transitioning) return;
     if (!state.settings.showGuide) return;
-    if (state.mode !== "character" || isTimeAttack()) return;
+    if (isTimeAttack()) return;
     const expected = state.target.tokens[state.typedTokens.length];
     const targetButton = expected && elements.keyboard.querySelector(`[data-key-id="${expected.keyId}"]`);
     if (targetButton) targetButton.classList.add("is-target");

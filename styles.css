@@ -1576,7 +1576,7 @@ body.is-modal {
     --mobile-key-row-height: clamp(50px, calc((100vw - 44px) * 0.18), 82px);
     min-height: 0;
     flex: 0 0 auto;
-    padding: 6px 8px 7px;
+    padding: 6px 0 7px;
   }
   .keyboard-heading { flex-basis: 29px; gap: 8px; }
   .keyboard-heading .eyebrow { display: none; }

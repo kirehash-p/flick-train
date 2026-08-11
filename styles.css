@@ -1573,7 +1573,7 @@ body.is-modal {
   .feedback-icon { width: 12px; height: 12px; flex-basis: 12px; font-size: 7px; }
 
   .keyboard-section {
-    --mobile-key-row-height: clamp(50px, calc((100vw - 44px) * 0.18), 82px);
+    --mobile-key-row-height: clamp(42px, 12vw, 54px);
     min-height: 0;
     flex: 0 0 auto;
     padding: 6px 0 7px;
@@ -1583,7 +1583,7 @@ body.is-modal {
   .keyboard-heading strong { font-size: 8px; }
   .language-switch { padding: 2px; border-radius: 8px; }
   .language-button { min-width: 37px; min-height: 25px; padding: 4px 6px; border-radius: 6px; font-size: 8px; }
-  .keyboard-shell { flex: 0 0 auto; padding: 5px; border-radius: 12px; }
+  .keyboard-shell { width: min(100%, 60vw); flex: 0 0 auto; padding: 5px; border-radius: 12px; }
   .keyboard-grid { flex: 0 0 auto; }
   .keyboard-grid[data-language="kana"] { height: calc(var(--mobile-key-row-height) * 4 + 12px); }
   .keyboard-grid[data-language="alphabet"] { height: calc(var(--mobile-key-row-height) * 4.72 + 16px); }

@@ -3,9 +3,6 @@
 
   const SESSION_LENGTH = 20;
   const WORD_SESSION_LENGTH = 6;
-  const TRANSITION_MS = 180;
-  const ATTACK_TRANSITION_MS = 100;
-
   const DIRECTIONS = {
     center: { label: "タップ", short: "中央", arrow: "•" },
     left: { label: "左フリック", short: "左", arrow: "←" },
@@ -817,25 +814,20 @@
 
   function completeTarget() {
     if (state.session.transitioning) return;
-    state.session.transitioning = true;
     state.session.completed += 1;
     state.targetIndex += 1;
     if (isTimeAttack()) state.timeAttack.correctCount += 1;
     updateSessionUI();
-    const sessionToken = state.sessionToken;
-    state.timers.transition = window.setTimeout(() => {
-      if (sessionToken !== state.sessionToken || !state.session || state.session.ended) return;
-      if (!isTimeAttack() && state.targetIndex >= state.sequence.length) return finishSession();
-      if (state.targetIndex >= state.sequence.length) {
-        state.sequence = buildSequence(state.mode, state.language);
-        state.targetIndex = 0;
-      }
-      state.target = state.sequence[state.targetIndex];
-      state.typedTokens = [];
-      state.session.transitioning = false;
-      renderPrompt();
-      updateSessionUI();
-    }, isTimeAttack() ? ATTACK_TRANSITION_MS : TRANSITION_MS);
+    if (!isTimeAttack() && state.targetIndex >= state.sequence.length) return finishSession();
+    if (state.targetIndex >= state.sequence.length) {
+      state.sequence = buildSequence(state.mode, state.language);
+      state.targetIndex = 0;
+    }
+    state.target = state.sequence[state.targetIndex];
+    state.typedTokens = [];
+    state.session.transitioning = false;
+    renderPrompt();
+    updateSessionUI();
   }
 
   function timeAttackRate() {
